@@ -24,6 +24,7 @@ import android.util.Range;
 import android.util.Rational;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.TextureView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -579,10 +580,6 @@ public class Camera2Engine extends CameraBaseEngine implements
             // This is a design flaw in the ImageReader / sensor implementation, as they should
             // simply DROP frames written to the surface if there are no Images available.
             // Since this is not how things work, we ensure that one Image is always available here.
-            if (mFrameProcessingReader!= null){
-                mFrameProcessingReader.close();
-                mFrameProcessingReader = null;
-            }
             mFrameProcessingReader = ImageReader.newInstance(
                     mFrameProcessingSize.getWidth(),
                     mFrameProcessingSize.getHeight(),
@@ -591,6 +588,11 @@ public class Camera2Engine extends CameraBaseEngine implements
             mFrameProcessingReader.setOnImageAvailableListener(this,
                     null);
             mFrameProcessingSurface = mFrameProcessingReader.getSurface();
+            if (mPreview.getOutput() instanceof TextureView) {
+                SurfaceTexture surfaceTexture = ((TextureView) mPreview.getOutput()).getSurfaceTexture();
+                Surface surface = new Surface(surfaceTexture);
+                outputSurfaces.add(surface);
+            }
             outputSurfaces.add(mFrameProcessingSurface);
         } else {
             mFrameProcessingReader = null;
@@ -741,12 +743,17 @@ public class Camera2Engine extends CameraBaseEngine implements
         mPreviewStreamSize = null;
         mCaptureSize = null;
         mFrameProcessingSize = null;
-        if (mFrameProcessingReader != null) {
-            // WARNING: This call synchronously releases all Images and their underlying
-            // properties. This can cause issues if the Image is being used.
-            mFrameProcessingReader.close();
-            mFrameProcessingReader = null;
+        try {
+            if (mFrameProcessingReader != null) {
+                // WARNING: This call synchronously releases all Images and their underlying
+                // properties. This can cause issues if the Image is being used.
+                mFrameProcessingReader.close();
+                mFrameProcessingReader = null;
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
+
         if (mPictureReader != null) {
             mPictureReader.close();
             mPictureReader = null;
