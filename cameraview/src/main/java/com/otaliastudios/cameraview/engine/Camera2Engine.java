@@ -579,6 +579,10 @@ public class Camera2Engine extends CameraBaseEngine implements
             // This is a design flaw in the ImageReader / sensor implementation, as they should
             // simply DROP frames written to the surface if there are no Images available.
             // Since this is not how things work, we ensure that one Image is always available here.
+            if (mFrameProcessingReader!= null){
+                mFrameProcessingReader.close();
+                mFrameProcessingReader = null;
+            }
             mFrameProcessingReader = ImageReader.newInstance(
                     mFrameProcessingSize.getWidth(),
                     mFrameProcessingSize.getHeight(),
