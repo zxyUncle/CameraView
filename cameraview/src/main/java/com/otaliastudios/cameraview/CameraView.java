@@ -870,7 +870,7 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
     public void close() {
         if (mInEditor) return;
         mOrientationHelper.disable();
-//        mCameraEngine.stop(false);
+        mCameraEngine.stop(false);
         if (mCameraPreview != null) mCameraPreview.onPause();
     }
 

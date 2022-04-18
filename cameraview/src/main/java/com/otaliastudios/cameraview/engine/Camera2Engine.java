@@ -588,9 +588,8 @@ public class Camera2Engine extends CameraBaseEngine implements
             mFrameProcessingReader.setOnImageAvailableListener(this,
                     null);
             mFrameProcessingSurface = mFrameProcessingReader.getSurface();
-            if (mPreview.getOutput() instanceof TextureView) {
-                SurfaceTexture surfaceTexture = ((TextureView) mPreview.getOutput()).getSurfaceTexture();
-                Surface surface = new Surface(surfaceTexture);
+            if (mPreview.getOutput() instanceof Surface) {
+                Surface surface = (Surface) mPreview.getOutput();
                 outputSurfaces.add(surface);
             }
             outputSurfaces.add(mFrameProcessingSurface);
