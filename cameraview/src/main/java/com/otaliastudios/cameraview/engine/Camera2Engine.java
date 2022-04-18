@@ -588,10 +588,10 @@ public class Camera2Engine extends CameraBaseEngine implements
             mFrameProcessingReader.setOnImageAvailableListener(this,
                     null);
             mFrameProcessingSurface = mFrameProcessingReader.getSurface();
-            if (mPreview.getOutput() instanceof Surface) {
-                Surface surface = (Surface) mPreview.getOutput();
-                outputSurfaces.add(surface);
-            }
+//            if (mPreview.getOutput() instanceof Surface) {
+//                Surface surface = (Surface) mPreview.getOutput();
+//                outputSurfaces.add(surface);
+//            }
             outputSurfaces.add(mFrameProcessingSurface);
         } else {
             mFrameProcessingReader = null;
@@ -738,7 +738,7 @@ public class Camera2Engine extends CameraBaseEngine implements
     protected Task<Void> onStopBind() {
         LOG.i("onStopBind:", "About to clean up.");
         mFrameProcessingSurface = null;
-        mPreviewStreamSurface = null;
+//        mPreviewStreamSurface = null;
         mPreviewStreamSize = null;
         mCaptureSize = null;
         mFrameProcessingSize = null;
